@@ -1,6 +1,6 @@
 const features = {
   locationCardTypes: false,
-  geolocation: false,
+  geolocation: true,
   login: false,
   hostARefugee: false,
   asylumForm: false,

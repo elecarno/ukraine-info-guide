@@ -1,11 +1,12 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
-import { Marker } from "react-leaflet";
+import { useEffect, useState, useRef } from "react";
 import MapMarker from "./MapMarker";
 import useGeoLocation from  "../../hooks/useGeoLocation";
 import features from "../../configs/features";
+
 
 const findCenter = (data) =>
   data
@@ -19,8 +20,6 @@ const findCenter = (data) =>
 const Map = ({ markers }) => {
   const zoomLevel = 7
 
-  let location = useGeoLocation()
-
   const data = markers
     .filter((m) => m.lat && m.lon && m.lat.length && m.lon.length)
     .map((m) => ({
@@ -33,27 +32,32 @@ const Map = ({ markers }) => {
 
   const position = findCenter(data);
 
-  //const mapRef = useRef()
-  let showMyLocation = () => { // either fix this or make it just request permission for location, or both
-    /*
+  const [enableGeolocation, setEnableGeolocation] = useState(false)
+  const location = useGeoLocation(enableGeolocation)
+  const allowLocation = () => {
+    setEnableGeolocation(true)
+    console.log("enable geo:" + enableGeolocation)
+  }
+
+  const [map, setMap] = useState(null);
+  const showMyLocation = () => { // either fix this or make it just request permission for location, or both 
     if(location.loaded && !location.error){
-      mapRef.current.leafletElement.flyTo([location.coordinates.lat, location.coordinates.lng], zoomLevel, {animate: true})
+      map.flyTo([location.coordinates.lat, location.coordinates.lng], zoomLevel, {animate: true})
     } else {
-      alert(location.error.message)
+      //alert(location.error.message) <- doesn't work properly, spits out error `message undefined`
+      console.log("location not loaded")
     }
-    */
   }
 
   return (
     <div>
       {features.geolocation &&
         <div>
-          <button className="showlocation-button" onClick={showMyLocation}>
-            Show My Location
-          </button>
+          <button className="showlocation-button" onClick={showMyLocation}>Show My Location</button>
+          <button onClick={allowLocation}>Allow Location</button>
         </div>
       }
-      <MapContainer center={position} zoom={zoomLevel} scrollWheelZoom={false}>
+      <MapContainer center={position} zoom={zoomLevel} scrollWheelZoom={false} whenCreated={setMap}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
