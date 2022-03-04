@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import AdminLayout from "../../components/AdminLayout";
+import TranslationEditor from "../../components/TranslationEditor";
 import LanguagePicker from "../../components/Navbar/LanguagePicker";
 
 export const getStaticProps = async ({ locale }) => ({
@@ -10,16 +12,11 @@ export const getStaticProps = async ({ locale }) => ({
   }
 });
 
-const Editor = ({ lang }) => {
-  return (
-    <p>Editing {lang} translations</p>
-  );
-}
-
 const Index = () => {
   const { t } = useTranslation();
+  const router = useRouter();
 
-  const [lang, setLang] = useState("en");
+  const [lang, setLang] = useState(router.locale);
 
   return (
     <AdminLayout title={t("Edit Translations")}>
@@ -29,7 +26,7 @@ const Index = () => {
         </div>
         {lang === "en"
           ? <p>{t("English cannot be edited")}</p>
-          : <Editor lang={lang} />
+          : <TranslationEditor t={t} lang={lang} />
         }
       </div>
     </AdminLayout>
