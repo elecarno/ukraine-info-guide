@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Hero from "../components/Hero";
@@ -14,7 +15,10 @@ const Index = () => {
 
   return (
     <Layout hero={<Hero title={t("Admin Panel")} />} >
-      <div className="flex flex-col w-full mb-10">
+      <div className="flex flex-col mb-10">
+        <Link href="/admin/translations">
+          <a className="link">{t("Edit Translations")}</a>
+        </Link>
       </div>
     </Layout>
   );
