@@ -1,6 +1,7 @@
 import "../styles/index.css";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../configs/constants";
@@ -52,6 +53,7 @@ const App = ({ Component, pageProps }) => {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
+        <Toaster />
         <Navbar />
         <Component {...pageProps} />
         <Footer />

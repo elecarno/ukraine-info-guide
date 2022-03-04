@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
 import {
   fetchTranslations,
   putTranslations,
@@ -41,11 +42,16 @@ const TranslationEditor = ({ t, lang }) => {
     }
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const output = {};
     for (const item of data)
       output[item.key] = item.value;
-    putTranslations(lang, output);
+    try {
+      await putTranslations(lang, output);
+      toast.success(t("Saved!"));
+    } catch (e) {
+      toast.error(t("Something went wrong!"));
+    }
   }
 
   return (
