@@ -2,9 +2,14 @@ import "../styles/index.css";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
+import { PublicClientApplication } from "@azure/msal-browser";
+import { MsalProvider } from "@azure/msal-react";
+import { msalConfig } from "../configs/MsalConfig";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../configs/constants";
+
+const msalInstance = new PublicClientApplication(msalConfig);
 
 const App = ({ Component, pageProps }) => {
   const { t } = useTranslation();
@@ -53,10 +58,12 @@ const App = ({ Component, pageProps }) => {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <div className="grid grid-rows-[auto_1fr_auto] min-h-screen">
-        <Toaster />
-        <Navbar />
-        <Component {...pageProps} />
-        <Footer />
+        <MsalProvider instance={msalInstance}>
+          <Toaster />
+          <Navbar />
+          <Component {...pageProps} />
+          <Footer />
+        </MsalProvider>
       </div>
     </>
   );
